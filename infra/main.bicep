@@ -91,6 +91,16 @@ module storage 'core/storage/storage.bicep' = {
   }
 }
 
+
+module ordersTable 'core/storage/storage-table.bicep' = {
+  name: 'ordersTable'
+  scope: rg
+  params: {
+    storageAccountName: storage.outputs.name
+    tableName: 'orders'
+  }
+}
+
 // @description('The runtime version for Node.js Azure Functions in Logic Apps. Common values include "~18", "~16", or "~14" depending on the Node.js LTS version support desired. Check Azure Functions documentation for currently supported versions.')
 module functions 'core/host/functions.bicep' = {
   name: 'logic-app'
