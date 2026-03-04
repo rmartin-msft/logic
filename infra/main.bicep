@@ -53,18 +53,6 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   tags: tags
 }
 
-// // Backing storage for Azure functions backend API
-// module storage './core/storage/storage-account.bicep' = {
-//   name: 'storage'
-//   scope: rg
-//   params: {
-//     name: !empty(storageAccountName) ? storageAccountName : '${abbrs.storageStorageAccounts}${resourceToken}'
-//     location: location
-//     tags: tags
-//     subnet: vnet.outputs.logicAppsSubnet
-//   }
-// }
-
 // Create an App Service Plan to group applications under the same payment plan and SKU
 module appServicePlan './core/host/appserviceplan.bicep' = {
   name: 'appserviceplan'
@@ -118,23 +106,6 @@ module logicappstd 'logicappstd.bicep' = {
     name: '${environmentName}-${resourceToken}'     
   }
 }
-
-// // @description('The runtime version for Node.js Azure Functions in Logic Apps. Common values include "~18", "~16", or "~14" depending on the Node.js LTS version support desired. Check Azure Functions documentation for currently supported versions.')
-// module functions 'core/host/functions.bicep' = {
-//   name: 'logic-app'
-//   scope: rg
-//   params: {
-//     name: '${abbrs.logicWorkflows}${environmentName}-${resourceToken}'
-//     location: location
-//     appServicePlanId: appServicePlan.outputs.id
-//     storageAccountName: storage.outputs.name
-//     runtimeName: 'node'    
-//     runtimeVersion: '~18'
-//     // applicationInsightsName: monitoring.outputs.applicationInsightsName
-//     tags: union(tags, { 'azd-service-name': 'api' })        
-//   }
-// }
-
 
 
 // Add resources to be provisioned below.

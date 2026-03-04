@@ -1,0 +1,30 @@
+###
+# @prompt hostname
+POST {{hostname}} HTTP/1.1
+Content-Type: application/json
+
+{ "product" : "Printer Paper 80GSM", "qty" : 500, "priority" : "Right Now"  }
+
+###
+# @prompt hostname
+POST {{hostname}} HTTP/1.1
+Content-Type: application/json
+
+{ "item" : "Whiteboard Markers", "qty" : -28, "priority" : "Urgent"  }
+
+###
+# @prompt hostname
+POST {{hostname}} HTTP/1.1
+Content-Type: application/json
+
+{ "item" : "Printer Paper 80GSM", "qty" : 500, "priority" : "Right Now"  }
+
+###
+# @prompt hostname
+POST {{hostname}} HTTP/1.1
+Content-Type: application/json
+
+{ "item" : "Writing Pad", "qty" : 21, "priority" : "Normal"  }
+
+
+
