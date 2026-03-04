@@ -26,8 +26,13 @@ param runtimeVersion string
 ])
 param extensionVersion string = '~4'
 
+@allowed([
+  '~18', '~20'
+])
+param nodeVersion string = '~20'
+
 // Microsoft.Web/sites Properties
-param kind string = 'functionapp,workflowapp,linux'
+param kind string = 'functionapp,workflowapp'
 
 // Microsoft.Web/sites/config
 param allowedOrigins array = []
@@ -61,6 +66,7 @@ module functions 'appservice.bicep' = {
         AzureWebJobsStorage: storageManagedIdentity ? null : 'DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${storage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
         FUNCTIONS_EXTENSION_VERSION: extensionVersion
         FUNCTIONS_WORKER_RUNTIME: runtimeName
+        WEBSITE_NODE_DEFAULT_VERSION: nodeVersion
       })
     clientAffinityEnabled: clientAffinityEnabled
     enableOryxBuild: enableOryxBuild

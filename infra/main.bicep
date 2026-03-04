@@ -16,6 +16,7 @@ param location string
 param appServicePlanName string = ''
 
 param storageAccountName string = ''
+param logicAppsStorageAccountName string = ''
 
 // Optional parameters to override the default azd resource naming conventions.
 // Add the following to main.parameters.json to provide values:
@@ -35,7 +36,7 @@ var tags = {
 // Generate a unique token to be used in naming resources.
 // Remove linter suppression after using.
 #disable-next-line no-unused-vars
-var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
+var resourceToken = toLower(uniqueString(subscription().id, environmentName, '1', location))
 
 // Name of the service defined in azure.yaml
 // A tag named azd-service-name with this value should be applied to the service host resource, such as:
@@ -71,15 +72,11 @@ module appServicePlan './core/host/appserviceplan.bicep' = {
   params: {
     name: !empty(appServicePlanName) ? appServicePlanName : '${abbrs.webServerFarms}${resourceToken}'
     location: location
-    tags: tags
-    kind: 'elastic'
+    tags: tags    
     sku: {
       name: 'WS1'
-      tier: 'WorkflowStandard'
-      size: 'WS1'      
-      family: 'WS'
-      capacity: 1
-    }    
+      tier: 'WorkflowStandard'      
+    }        
   }
 }
 
@@ -92,30 +89,51 @@ module storage 'core/storage/storage.bicep' = {
 }
 
 
+module logicAppsStorage 'core/storage/storage.bicep' = {
+  scope: rg
+  name: 'lastorage'
+  params : {
+    name: !empty(logicAppsStorageAccountName) ? storageAccountName : '${abbrs.storageStorageAccounts}la${resourceToken}'
+    
+  }
+}
+
+
 module ordersTable 'core/storage/storage-table.bicep' = {
   name: 'ordersTable'
   scope: rg
-  params: {
+  params: {    
     storageAccountName: storage.outputs.name
     tableName: 'orders'
   }
 }
 
-// @description('The runtime version for Node.js Azure Functions in Logic Apps. Common values include "~18", "~16", or "~14" depending on the Node.js LTS version support desired. Check Azure Functions documentation for currently supported versions.')
-module functions 'core/host/functions.bicep' = {
-  name: 'logic-app'
+module logicappstd 'logicappstd.bicep' = {
+  name: 'logicappsstd'
   scope: rg
   params: {
-    name: '${abbrs.logicWorkflows}${environmentName}-${resourceToken}'
+    hostingPlanName: appServicePlan.outputs.name
+    storageAccountName: logicAppsStorage.outputs.name    
     location: location
-    appServicePlanId: appServicePlan.outputs.id
-    storageAccountName: storage.outputs.name
-    runtimeName: 'node'    
-    runtimeVersion: '~18'
-    // applicationInsightsName: monitoring.outputs.applicationInsightsName
-    tags: union(tags, { 'azd-service-name': 'api' })        
+    name: '${environmentName}-${resourceToken}'     
   }
 }
+
+// // @description('The runtime version for Node.js Azure Functions in Logic Apps. Common values include "~18", "~16", or "~14" depending on the Node.js LTS version support desired. Check Azure Functions documentation for currently supported versions.')
+// module functions 'core/host/functions.bicep' = {
+//   name: 'logic-app'
+//   scope: rg
+//   params: {
+//     name: '${abbrs.logicWorkflows}${environmentName}-${resourceToken}'
+//     location: location
+//     appServicePlanId: appServicePlan.outputs.id
+//     storageAccountName: storage.outputs.name
+//     runtimeName: 'node'    
+//     runtimeVersion: '~18'
+//     // applicationInsightsName: monitoring.outputs.applicationInsightsName
+//     tags: union(tags, { 'azd-service-name': 'api' })        
+//   }
+// }
 
 
 

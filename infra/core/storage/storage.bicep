@@ -13,6 +13,24 @@ resource storage 'Microsoft.Storage/storageAccounts@2025-06-01' = {
   }
   properties: {
     accessTier: 'Hot'
+    networkAcls: {
+      bypass: 'AzureServices'
+      defaultAction: 'Allow'
+    }    
+    supportsHttpsTrafficOnly: true
+    encryption: {
+      services: {
+        file: {
+          keyType: 'Account'
+          enabled: true
+        }
+        blob: {
+          keyType: 'Account'
+          enabled: true
+        }      
+      }
+      keySource: 'Microsoft.Storage'      
+    }
   }
 }
 
