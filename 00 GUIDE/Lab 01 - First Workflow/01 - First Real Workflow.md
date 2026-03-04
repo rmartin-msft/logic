@@ -171,20 +171,7 @@ You should also see a Send Request link.
     ```
 
 
-### Step 7 - Adding an action
-Once we've received some data, we now need to do something with it. For our workflow, we're going to add a record into Azure Table Storage to represent adding a request to add new supplies for our monthly order.
 
-![AddAction](../01/IMG/AddAction.gif)
-
-1. Click the + button underneath the HTTP action and choose Add Action
-2. Choose Data transformation from the action
-3. In the search box type `Table` to find the Azure Table Storage actions
-4. Choose the `Insert Entity (V2)` action
-
-As we don't already have a connection to Azure Table Storage already setup, you'll need to create a new connection to Azure Storage.
-
-5. Add your initials to the connection to make it easier to find in the future
-6. We'll cover security later, for now choose Access Key
 
 
 
