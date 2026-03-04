@@ -120,26 +120,6 @@ resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-0
   }  
 }
 
-// resource hostingPlan 'Microsoft.Web/serverfarms@2024-11-01' = {
-//   name: hostingPlanName
-//   location: location
-//   tags: {}
-//   sku: {
-//     tier: sku
-//     name: skuCode
-//   }
-//   kind: ''
-//   properties: {
-//     name: hostingPlanName
-//     workerSize: workerSize
-//     workerSizeId: workerSizeId
-//     numberOfWorkers: numberOfWorkers
-//     maximumElasticWorkerCount: '20'
-//     zoneRedundant: false
-//   }
-//   dependsOn: []
-// }
-
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
   location: location
